@@ -73,6 +73,18 @@ def cambiar_directorio(destino):
         avisar("error", f"No se pudo cambiar a '{destino}': {e}")
 
 
+def subir_nivel():
+    def cdup(ftp):
+        ftp.voidcmd("CDUP")  # ftplib no tiene un método propio para CDUP
+        return ftp.pwd()
+    try:
+        ruta = ejecutar(cdup)
+        st.session_state.ftp_dir = ruta
+        avisar("success", f"CDUP correcto. Directorio actual: {ruta}")
+    except ftplib.all_errors as e:
+        avisar("error", f"Error FTP en CDUP: {e}")
+
+
 def ir_a_ruta():
     destino = st.session_state.ftp_ruta_manual.strip()
     if destino:
@@ -232,8 +244,7 @@ def mostrar():
         n1.button("📂 Entrar (CWD)", on_click=lambda: cambiar_directorio(posixpath.join(datos["pwd"], ss.ftp_carpeta_sel)))
     else:
         n1.caption("No hay subcarpetas.")
-    n2.button("⬆️ Subir un nivel (CDUP)", on_click=cambiar_directorio, args=(posixpath.dirname(datos["pwd"].rstrip("/")) or "/",),
-              disabled=datos["pwd"] == "/")
+    n2.button("⬆️ Subir un nivel (CDUP)", on_click=subir_nivel, disabled=datos["pwd"] == "/")
     n3.text_input("Ir a una ruta", key="ftp_ruta_manual", placeholder="/docs o subcarpeta")
     n3.button("Ejecutar CWD", on_click=ir_a_ruta)
 
