@@ -4,3 +4,7 @@ __pycache__/
 *.log
 ftp_files/
 www/
+# Datos que generan los servidores al ejecutarse
+buzones/
+chat_data/
+config_servidor.json

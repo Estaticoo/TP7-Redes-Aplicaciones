@@ -1,0 +1,6 @@
+[server]
+# Sin la pregunta de email del primer arranque; los scripts de inicio abren el navegador
+headless = true
+
+[browser]
+gatherUsageStats = false
